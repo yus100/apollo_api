@@ -26,8 +26,8 @@ A simple Flask-based web service that provides CRUD-style API access to manage v
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/your-username/vehicle-management-api.git
-   cd vehicle-management-api
+   git clone https://github.com/yus100/apollo_api.git
+   cd apollo_api
    ```
 
 2. Create a virtual environment and activate it:
