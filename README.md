@@ -55,12 +55,20 @@ Run the test suite to ensure everything works as expected:
 python -m unittest discover tests
 ```
 
-## **Example Requests**
+### **Testing the API in PowerShell**
 
-### **Create a Vehicle**
-`POST /vehicle`
-```json
-{
+In PowerShell, `curl` is an alias for `Invoke-WebRequest`. To test the API in PowerShell, you can use the `Invoke-WebRequest` command instead.
+
+#### **GET Request**
+To retrieve all vehicles:
+```powershell
+Invoke-WebRequest -Uri http://127.0.0.1:5000/vehicle -Method GET
+```
+
+#### **POST Request**
+To create a new vehicle:
+```powershell
+Invoke-WebRequest -Uri http://127.0.0.1:5000/vehicle -Method POST -Body '{
   "vin": "12345ABC",
   "manufacturer_name": "Tesla",
   "description": "Electric car",
@@ -69,16 +77,13 @@ python -m unittest discover tests
   "model_year": 2022,
   "purchase_price": 79999.99,
   "fuel_type": "Electric"
-}
+}' -ContentType 'application/json'
 ```
 
-### **Get All Vehicles**
-`GET /vehicle`
-
-### **Update a Vehicle**
-`PUT /vehicle/12345ABC`
-```json
-{
+#### **PUT Request**
+To update an existing vehicle:
+```powershell
+Invoke-WebRequest -Uri http://127.0.0.1:5000/vehicle/12345abc -Method PUT -Body '{
   "manufacturer_name": "Tesla Updated",
   "description": "Updated description",
   "horse_power": 680,
@@ -86,11 +91,15 @@ python -m unittest discover tests
   "model_year": 2023,
   "purchase_price": 82999.99,
   "fuel_type": "Electric Updated"
-}
+}' -ContentType 'application/json'
 ```
 
-### **Delete a Vehicle**
-`DELETE /vehicle/12345ABC`
+#### **DELETE Request**
+To delete a vehicle by VIN:
+```powershell
+Invoke-WebRequest -Uri http://127.0.0.1:5000/vehicle/12345abc -Method DELETE
+```
+
 
 ## **Technologies Used**
 
