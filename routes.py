@@ -6,11 +6,16 @@ from marshmallow import ValidationError
 
 routes = Blueprint('routes', __name__)
 
+# Helper function to normalize VIN
+def normalize_vin(vin):
+    return vin.lower()
+
 # Create a vehicle
 @routes.route('/vehicle', methods=['POST'])
 def create_vehicle():
     try:
         data = request.json
+        data['vin'] = normalize_vin(data['vin'])  # Normalize VIN before saving
         new_vehicle = vehicle_schema.load(data, session=db.session)
         db.session.add(new_vehicle)
         db.session.commit()
@@ -27,7 +32,8 @@ def get_vehicles():
 # Get a vehicle by VIN
 @routes.route('/vehicle/<vin>', methods=['GET'])
 def get_vehicle(vin):
-    vehicle = Vehicle.query.get(vin)
+    normalized_vin = normalize_vin(vin)
+    vehicle = db.session.get(Vehicle, normalized_vin)
     if vehicle:
         return jsonify(vehicle_schema.dump(vehicle))
     return jsonify({"error": "Vehicle not found"}), 404
@@ -35,7 +41,8 @@ def get_vehicle(vin):
 # Update a vehicle
 @routes.route('/vehicle/<vin>', methods=['PUT'])
 def update_vehicle(vin):
-    vehicle = Vehicle.query.get(vin)
+    normalized_vin = normalize_vin(vin)
+    vehicle = db.session.get(Vehicle, normalized_vin)
     if not vehicle:
         return jsonify({"error": "Vehicle not found"}), 404
 
@@ -48,7 +55,8 @@ def update_vehicle(vin):
 # Delete a vehicle
 @routes.route('/vehicle/<vin>', methods=['DELETE'])
 def delete_vehicle(vin):
-    vehicle = Vehicle.query.get(vin)
+    normalized_vin = normalize_vin(vin)
+    vehicle = db.session.get(Vehicle, normalized_vin)
     if vehicle:
         db.session.delete(vehicle)
         db.session.commit()
